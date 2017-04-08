@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +11,7 @@
 
 #define BUFFER_SIZE 10000
 #define CANT_DAT 8
+
 
 int main(){
 	char buffer[BUFFER_SIZE];
@@ -51,7 +54,25 @@ int main(){
 		datos[indice].numero = atoi(numero);
 		strcpy(datos[indice].nombre_estacion,nombre_estacion);
 		datos[indice].ID_localidad = atoi(id_localidad);
+		strptime(fecha, "%d/%m/%Y %H:%M",&(datos[indice].fecha));
+		datos[indice].temperatura = atof(temperatura);
+		datos[indice].humedad = atof(humedad);
+		datos[indice].punto_rocio = atof(punto_rocio);
+		datos[indice].precipitacion = atof(precipitacion);
+		datos[indice].velocidad_viento = atof(velocidad_viento);
+		strcpy(datos[indice].direccion_viento,direccion_viento);
+		datos[indice].rafaga_maxima = atof(rafaga_maxima);
+		datos[indice].presion = atof(presion);
+		datos[indice].radiacion_solar  =atof(radiacion_solar);
+		datos[indice].temperatura_suelo_1 = atof(temperatura_suelo_1);
+		datos[indice].temperatura_suelo_2 = atof(temperatura_suelo_2);
+		datos[indice].temperatura_suelo_3 = atof(temperatura_suelo_3);
+		datos[indice].humedad_suelo_1 = atof(humedad_suelo_1);
+		datos[indice].humedad_suelo_2 = atof(humedad_suelo_2);
+		datos[indice].humedad_suelo_3 = atof(humedad_suelo_3);
+		datos[indice].humedad_hoja = atof(humedad_hoja);
 		printf("Numero: %i Nombre: %s ID: %i\n",datos[indice].numero,datos[indice].nombre_estacion,datos[indice].ID_localidad);
+		printf("Fecha: %i \n",datos[indice].fecha.tm_min);
 		indice++;
 
 	}
