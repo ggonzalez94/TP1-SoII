@@ -10,14 +10,18 @@
 
 #include "usuarios.h"
 #include "serverHelpers.h"
+#include "estructuraDeDatos.h"
 #define TAM 256
 #define puerto 6020
+#define TAM_FILE 8 //Tamano de la estructura que guarda las lineas del archivo
 
 int main( int argc, char *argv[] ) {
 	int sockfd, newsockfd, clilen, pid;
 	char buffer[TAM];
 	struct sockaddr_in serv_addr, cli_addr;
 	int n;
+	struct Datos *datos;
+	char *estaciones[TAM_FILE]; //Arreglo con el nombre de las estaciones
 	//Usuarios de prueba
 	struct Usuario usuario1;
 	struct Usuario usuario2;
@@ -26,12 +30,19 @@ int main( int argc, char *argv[] ) {
 	usuario2.nombre_usuario = "gonzalez";
 	usuario2.password = "admin321";
 	struct Usuario usuarios[NUMUSERS] = {usuario1,usuario2};
-
-	if ( argc < 1 ) {
-        	//fprintf( stderr, "Uso: %s <puerto>\n", argv[0] );
-		exit( 1 );
+	//Arreglo de estructura con los datos del archivo csv
+	datos = csv_parser();
+	float precipitacion_mensual[12]; //Uno para cada mes del ano
+	float precipitacion_diaria[365]; //Uno para cada dia del ano
+	diario_precipitacion(30135,precipitacion_diaria,datos,TAM_FILE);
+	for (int i=0;i<365;i++){
+		if(precipitacion_diaria[i] != 0){
+			printf("Precipitacion dia %i: %f \n",i,precipitacion_diaria[i]);
+		}
+		
 	}
-
+	
+	//Creo el socket y lo ligo a una direccion ip
 	sockfd = socket( AF_INET, SOCK_STREAM, 0);
 	if ( sockfd < 0 ) { 
 		perror( " apertura de socket ");
@@ -52,6 +63,7 @@ int main( int argc, char *argv[] ) {
 	listen( sockfd, 5 );
 	clilen = sizeof( cli_addr );
 
+	//Loop infinito para que el server se quede en espera de nuevos clientes
 	while( 1 ) {
 		newsockfd = accept( sockfd, (struct sockaddr *) &cli_addr, &clilen );
 		if ( newsockfd < 0 ) {
