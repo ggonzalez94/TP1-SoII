@@ -136,3 +136,5 @@ void diario_precipitacion(int numero_estacion,float array_precipitacion[],struct
 	}
 	return;
 }
+
+

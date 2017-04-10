@@ -21,7 +21,7 @@ int main( int argc, char *argv[] ) {
 	struct sockaddr_in serv_addr, cli_addr;
 	int n;
 	struct Datos *datos;
-	char *estaciones[TAM_FILE]; //Arreglo con el nombre de las estaciones
+	char *estaciones[TAM_FILE]; //Arreglo con las estaciones no repetidas
 	//Usuarios de prueba
 	struct Usuario usuario1;
 	struct Usuario usuario2;
@@ -33,14 +33,7 @@ int main( int argc, char *argv[] ) {
 	//Arreglo de estructura con los datos del archivo csv
 	datos = csv_parser();
 	float precipitacion_mensual[12]; //Uno para cada mes del ano
-	float precipitacion_diaria[365]; //Uno para cada dia del ano
-	diario_precipitacion(30135,precipitacion_diaria,datos,TAM_FILE);
-	for (int i=0;i<365;i++){
-		if(precipitacion_diaria[i] != 0){
-			printf("Precipitacion dia %i: %f \n",i,precipitacion_diaria[i]);
-		}
-		
-	}
+	float precipitacion_diaria[365]; //Uno para cada dia del ano}
 	
 	//Creo el socket y lo ligo a una direccion ip
 	sockfd = socket( AF_INET, SOCK_STREAM, 0);
