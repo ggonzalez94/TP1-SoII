@@ -1,6 +1,6 @@
 Numero,Estacion,ID Localidad,Fecha,Temperatura [�C],Humedad [%HR],Punto de Roc�o [�C],Precipitaci�n [mm],Velocidad Viento [Km/h],Direcci�n Viento,Rafaga Maxima [Km/h],Presi�n [hPa],Radiaci�n Solar [W/m2],Temperatura Suelo 1 [�C],Temperatura Suelo 2 [�C],Temperatura Suelo 3 [�C],Humedad Suelo 1 [%grav],Humedad Suelo 2 [%grav],Humedad Suelo 3 [%grav],Humedad de Hoja [%]
-30135,Yacanto Norte - E01,0,01/02/2017 00:00,19.9,64.8,13.1,0,3.9,OESTE NOROESTE,8.1,882.5,--,--,--,--,--,--,--,--
-30135,Yacanto Norte - E01,0,01/02/2017 00:10,19.4,67.2,13.2,0.2,17.5,NORTE,31.8,883.8,--,--,--,--,--,--,--,--
+30135,Yacanto Norte - E01,0,01/02/2017 00:00,--,64.8,13.1,0,3.9,OESTE NOROESTE,8.1,882.5,--,--,--,--,--,--,--,--
+30135,Yacanto Norte - E01,0,01/02/2017 00:10,119.4,67.2,13.2,0.2,17.5,NORTE,31.8,883.8,--,--,--,--,--,--,--,--
 30057,MagyaCba 60 cuadras,0,04/02/2017 20:30,19.9,71.4,14.6,0,16.3,SUR,29.4,962.5,0,24,--,--,--,--,--,--
 30057,MagyaCba 60 cuadras,0,04/02/2017 20:40,19.5,72.3,14.4,0,14.8,SUR,29.3,961.9,0,24,--,--,--,--,--,--
 30057,MagyaCba 60 cuadras,0,04/02/2017 20:50,19.1,74.2,14.4,0,10,SUDESTE SUR,20.4,962.5,0,23.8,--,--,--,--,--,--

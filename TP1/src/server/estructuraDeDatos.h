@@ -1,3 +1,9 @@
+/** @file estructuraDeDatos.h
+ *  @brief Estructura de datos con todos los campos necesarias para almacenar los datos del archivo
+ *
+ * Se almacena cada linea del archivo en una estructura de Datos.
+ */
+
 #include <time.h>
 
 struct Datos{

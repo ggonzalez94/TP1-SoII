@@ -1,3 +1,8 @@
+/** @file colores.h
+ *  @brief Definicion de algunos colores para usar en el prompt del cliente
+ *
+ */
+
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
 #define RED     "\033[31m"      /* Red */

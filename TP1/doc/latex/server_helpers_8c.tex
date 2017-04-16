@@ -1,0 +1,237 @@
+\hypertarget{server_helpers_8c}{}\section{/home/gustav/\+Desktop/\+So\+I\+I/\+T\+P1/src/server/server\+Helpers.c File Reference}
+\label{server_helpers_8c}\index{/home/gustav/\+Desktop/\+So\+I\+I/\+T\+P1/src/server/server\+Helpers.\+c@{/home/gustav/\+Desktop/\+So\+I\+I/\+T\+P1/src/server/server\+Helpers.\+c}}
+
+
+Funciones auxiliares necesarias para el funcionamiento del server.  
+
+
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$stdbool.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}usuarios.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}estructura\+De\+Datos.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}estructura\+Promedios.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}server\+Helpers.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{server_helpers_8c_a52747f9a7b9f7e807317345f6c6a5334}{autenticacion} (char $\ast$usuario, char $\ast$password, struct \hyperlink{struct_usuario}{Usuario} $\ast$usuarios, int array\+\_\+length)
+\begin{DoxyCompactList}\small\item\em Funcion para autenticar un usuario dentro de la base de \hyperlink{struct_datos}{Datos}. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_datos}{Datos} $\ast$ \hyperlink{server_helpers_8c_aec583e06a05d47f811d26e31bb3ce5d0}{csv\+\_\+parser} ()\hypertarget{server_helpers_8c_aec583e06a05d47f811d26e31bb3ce5d0}{}\label{server_helpers_8c_aec583e06a05d47f811d26e31bb3ce5d0}
+
+\begin{DoxyCompactList}\small\item\em Devuelve un puntero a un array de estructuras con los datos del archivo C\+SV. \end{DoxyCompactList}\item 
+void \hyperlink{server_helpers_8c_acf6e7095e36ca0df0af17219e8ca9893}{listar\+\_\+estaciones} (struct \hyperlink{struct_datos}{Datos} $\ast$const datos, struct \hyperlink{struct_promedio}{Promedio} $\ast$estaciones, int size\+\_\+datos, int cantidad\+\_\+estaciones)
+\begin{DoxyCompactList}\small\item\em Lista las estaciones sin repetir. Falta que liste los sensores. \end{DoxyCompactList}\item 
+void \hyperlink{server_helpers_8c_a091cdd120f1515ff96b10a78512223ea}{mensual\+\_\+precipitacion} (int numero\+\_\+estacion, float array\+\_\+precipitacion\mbox{[}$\,$\mbox{]}, struct \hyperlink{struct_datos}{Datos} $\ast$const datos, int size\+\_\+datos)
+\begin{DoxyCompactList}\small\item\em L\+Lena en el arreglo array\+\_\+precipitacion el acumulado mensual de precipitaciones para la estacion solicitada. \end{DoxyCompactList}\item 
+void \hyperlink{server_helpers_8c_af0dfd67d303858fd725e32bd347e54ad}{diario\+\_\+precipitacion} (int numero\+\_\+estacion, float array\+\_\+precipitacion\mbox{[}$\,$\mbox{]}, struct \hyperlink{struct_datos}{Datos} $\ast$const datos, int size\+\_\+datos)
+\begin{DoxyCompactList}\small\item\em L\+Lena en el arreglo array\+\_\+precipitacion el acumulado diario de precipitaciones para la estacion solicitada. \end{DoxyCompactList}\item 
+void \hyperlink{server_helpers_8c_ab6705a7423e273187a88a15552ffa2f4}{calcular\+\_\+promedio} (char $\ast$variable, struct \hyperlink{struct_promedio}{Promedio} $\ast$promedio\+\_\+variable, struct \hyperlink{struct_datos}{Datos} $\ast$const datos, int size\+\_\+datos, int cantidad\+\_\+estaciones)
+\begin{DoxyCompactList}\small\item\em Calcula el promedio para la variable solicitada de todas las estaciones. No funciona con todas las variables. \end{DoxyCompactList}\item 
+int \hyperlink{server_helpers_8c_a1a158427cc4d15de139f85fb36f1b84d}{read\+\_\+all} (int socket, void $\ast$buffer, int buffer\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Envoltorio para read. Funcion segura para asegurarse de leer todos los datos. \end{DoxyCompactList}\item 
+bool \hyperlink{server_helpers_8c_a918f85b4d5ff059b8d1b95639cea420a}{ends\+With} (const char $\ast$str, const char $\ast$suffix)
+\begin{DoxyCompactList}\small\item\em Comprueba si una cadena (str) termina con otra (suffix) \end{DoxyCompactList}\item 
+bool \hyperlink{server_helpers_8c_a266480e602ae7b55989e10c1de0d53f2}{starts\+With} (const char $\ast$pre, const char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Devuelve true si la cadena str comienza con la cadena pre. False caso contrario. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Funciones auxiliares necesarias para el funcionamiento del server. 
+
+Incluye funciones para la autenticacion,parseo del archivo csv y funciones internas del server para ejecutar los comandos(listar,promedio,etc) 
+
+\subsection{Function Documentation}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!autenticacion@{autenticacion}}
+\index{autenticacion@{autenticacion}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{autenticacion(char $\ast$usuario, char $\ast$password, struct Usuario $\ast$usuarios, int array\+\_\+length)}{autenticacion(char *usuario, char *password, struct Usuario *usuarios, int array_length)}}]{\setlength{\rightskip}{0pt plus 5cm}bool autenticacion (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{usuario, }
+\item[{char $\ast$}]{password, }
+\item[{struct {\bf Usuario} $\ast$}]{usuarios, }
+\item[{int}]{array\+\_\+length}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_a52747f9a7b9f7e807317345f6c6a5334}{}\label{server_helpers_8c_a52747f9a7b9f7e807317345f6c6a5334}
+
+
+Funcion para autenticar un usuario dentro de la base de \hyperlink{struct_datos}{Datos}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em usuario} & Nombre del usuario \\
+\hline
+{\em password} & Contrasena del usuario \\
+\hline
+{\em usuarios} & Puntero al array de estructuras de usuarios validos(base de datos) \\
+\hline
+{\em array\+\_\+length} & Cantidad de usuarios \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!calcular\+\_\+promedio@{calcular\+\_\+promedio}}
+\index{calcular\+\_\+promedio@{calcular\+\_\+promedio}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{calcular\+\_\+promedio(char $\ast$variable, struct Promedio $\ast$promedio\+\_\+variable, struct Datos $\ast$const datos, int size\+\_\+datos, int cantidad\+\_\+estaciones)}{calcular_promedio(char *variable, struct Promedio *promedio_variable, struct Datos *const datos, int size_datos, int cantidad_estaciones)}}]{\setlength{\rightskip}{0pt plus 5cm}void calcular\+\_\+promedio (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{variable, }
+\item[{struct {\bf Promedio} $\ast$}]{promedio\+\_\+variable, }
+\item[{struct {\bf Datos} $\ast$const}]{datos, }
+\item[{int}]{size\+\_\+datos, }
+\item[{int}]{cantidad\+\_\+estaciones}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_ab6705a7423e273187a88a15552ffa2f4}{}\label{server_helpers_8c_ab6705a7423e273187a88a15552ffa2f4}
+
+
+Calcula el promedio para la variable solicitada de todas las estaciones. No funciona con todas las variables. 
+
+Por un tema de tiempo y no repetir if(no encontre otra forma) solo trabaja con algunas variables hardcodeadas
+
+
+\begin{DoxyParams}{Parameters}
+{\em variable} & Variable de interes \\
+\hline
+{\em promedio\+\_\+variable} & Arreglo con 1 elemento por estacio \\
+\hline
+{\em datos} & Arreglo de datos de las estaciones \\
+\hline
+{\em size\+\_\+datos} & Cantidad de datos en el archivo C\+SV \\
+\hline
+{\em cantidad\+\_\+estaciones} & Cantidad de estaciones \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!diario\+\_\+precipitacion@{diario\+\_\+precipitacion}}
+\index{diario\+\_\+precipitacion@{diario\+\_\+precipitacion}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{diario\+\_\+precipitacion(int numero\+\_\+estacion, float array\+\_\+precipitacion[], struct Datos $\ast$const datos, int size\+\_\+datos)}{diario_precipitacion(int numero_estacion, float array_precipitacion[], struct Datos *const datos, int size_datos)}}]{\setlength{\rightskip}{0pt plus 5cm}void diario\+\_\+precipitacion (
+\begin{DoxyParamCaption}
+\item[{int}]{numero\+\_\+estacion, }
+\item[{float}]{array\+\_\+precipitacion\mbox{[}$\,$\mbox{]}, }
+\item[{struct {\bf Datos} $\ast$const}]{datos, }
+\item[{int}]{size\+\_\+datos}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_af0dfd67d303858fd725e32bd347e54ad}{}\label{server_helpers_8c_af0dfd67d303858fd725e32bd347e54ad}
+
+
+L\+Lena en el arreglo array\+\_\+precipitacion el acumulado diario de precipitaciones para la estacion solicitada. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em numero\+\_\+estacion} & La estacion a buscar \\
+\hline
+{\em array\+\_\+precipitacion} & Arreglo de 365 elementos a llenar(1 por dia) \\
+\hline
+{\em datos} & Arreglo de datos de las estaciones \\
+\hline
+{\em size\+\_\+datos} & Cantidad de datos en el archivo C\+SV \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!ends\+With@{ends\+With}}
+\index{ends\+With@{ends\+With}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{ends\+With(const char $\ast$str, const char $\ast$suffix)}{endsWith(const char *str, const char *suffix)}}]{\setlength{\rightskip}{0pt plus 5cm}bool ends\+With (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{str, }
+\item[{const char $\ast$}]{suffix}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_a918f85b4d5ff059b8d1b95639cea420a}{}\label{server_helpers_8c_a918f85b4d5ff059b8d1b95639cea420a}
+
+
+Comprueba si una cadena (str) termina con otra (suffix) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Cadena dentro de la cual buscar \\
+\hline
+{\em suffix} & Sufijo \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!listar\+\_\+estaciones@{listar\+\_\+estaciones}}
+\index{listar\+\_\+estaciones@{listar\+\_\+estaciones}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{listar\+\_\+estaciones(struct Datos $\ast$const datos, struct Promedio $\ast$estaciones, int size\+\_\+datos, int cantidad\+\_\+estaciones)}{listar_estaciones(struct Datos *const datos, struct Promedio *estaciones, int size_datos, int cantidad_estaciones)}}]{\setlength{\rightskip}{0pt plus 5cm}void listar\+\_\+estaciones (
+\begin{DoxyParamCaption}
+\item[{struct {\bf Datos} $\ast$const}]{datos, }
+\item[{struct {\bf Promedio} $\ast$}]{estaciones, }
+\item[{int}]{size\+\_\+datos, }
+\item[{int}]{cantidad\+\_\+estaciones}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_acf6e7095e36ca0df0af17219e8ca9893}{}\label{server_helpers_8c_acf6e7095e36ca0df0af17219e8ca9893}
+
+
+Lista las estaciones sin repetir. Falta que liste los sensores. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em datos} & Arreglo de datos de las estaciones \\
+\hline
+{\em estaciones} & Arreglo de estaciones para llenar sin repetir \\
+\hline
+{\em size\+\_\+datos} & Cantidad de datos en el archivo C\+SV \\
+\hline
+{\em cantidad\+\_\+estaciones} & Cantidad de estaciones \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!mensual\+\_\+precipitacion@{mensual\+\_\+precipitacion}}
+\index{mensual\+\_\+precipitacion@{mensual\+\_\+precipitacion}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{mensual\+\_\+precipitacion(int numero\+\_\+estacion, float array\+\_\+precipitacion[], struct Datos $\ast$const datos, int size\+\_\+datos)}{mensual_precipitacion(int numero_estacion, float array_precipitacion[], struct Datos *const datos, int size_datos)}}]{\setlength{\rightskip}{0pt plus 5cm}void mensual\+\_\+precipitacion (
+\begin{DoxyParamCaption}
+\item[{int}]{numero\+\_\+estacion, }
+\item[{float}]{array\+\_\+precipitacion\mbox{[}$\,$\mbox{]}, }
+\item[{struct {\bf Datos} $\ast$const}]{datos, }
+\item[{int}]{size\+\_\+datos}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_a091cdd120f1515ff96b10a78512223ea}{}\label{server_helpers_8c_a091cdd120f1515ff96b10a78512223ea}
+
+
+L\+Lena en el arreglo array\+\_\+precipitacion el acumulado mensual de precipitaciones para la estacion solicitada. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em numero\+\_\+estacion} & La estacion a buscar \\
+\hline
+{\em array\+\_\+precipitacion} & Arreglo de 12 elementos a llenar(1 por mes) \\
+\hline
+{\em datos} & Arreglo de datos de las estaciones \\
+\hline
+{\em size\+\_\+datos} & Cantidad de datos en el archivo C\+SV \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!read\+\_\+all@{read\+\_\+all}}
+\index{read\+\_\+all@{read\+\_\+all}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{read\+\_\+all(int socket, void $\ast$buffer, int buffer\+\_\+size)}{read_all(int socket, void *buffer, int buffer_size)}}]{\setlength{\rightskip}{0pt plus 5cm}int read\+\_\+all (
+\begin{DoxyParamCaption}
+\item[{int}]{socket, }
+\item[{void $\ast$}]{buffer, }
+\item[{int}]{buffer\+\_\+size}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_a1a158427cc4d15de139f85fb36f1b84d}{}\label{server_helpers_8c_a1a158427cc4d15de139f85fb36f1b84d}
+
+
+Envoltorio para read. Funcion segura para asegurarse de leer todos los datos. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket} & Socket descriptor \\
+\hline
+{\em buffer} & Buffer en cual almacenar la cadena leida \\
+\hline
+{\em buffer\+\_\+size} & Tamano del buffer \\
+\hline
+\end{DoxyParams}
+\index{server\+Helpers.\+c@{server\+Helpers.\+c}!starts\+With@{starts\+With}}
+\index{starts\+With@{starts\+With}!server\+Helpers.\+c@{server\+Helpers.\+c}}
+\subsubsection[{\texorpdfstring{starts\+With(const char $\ast$pre, const char $\ast$str)}{startsWith(const char *pre, const char *str)}}]{\setlength{\rightskip}{0pt plus 5cm}bool starts\+With (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{pre, }
+\item[{const char $\ast$}]{str}
+\end{DoxyParamCaption}
+)}\hypertarget{server_helpers_8c_a266480e602ae7b55989e10c1de0d53f2}{}\label{server_helpers_8c_a266480e602ae7b55989e10c1de0d53f2}
+
+
+Devuelve true si la cadena str comienza con la cadena pre. False caso contrario. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pre} & Prefijo \\
+\hline
+{\em str} & Cadena dentro de la cual buscar \\
+\hline
+\end{DoxyParams}

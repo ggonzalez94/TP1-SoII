@@ -2,7 +2,7 @@
 
 CC=gcc
 CFLAGS=-I.
-DEPS = serverHelpers.h usuarios.h estructuraDeDatos.h
+DEPS = serverHelpers.h usuarios.h estructuraDeDatos.h estructuraPromedios.h
 OBJ = server.o serverHelpers.o 
 
 %.o: %.c $(DEPS)

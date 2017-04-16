@@ -1,5 +1,3 @@
-Datos desde el 01/02/2017 hasta el 28/02/2017,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,
 Numero,Estacion,ID Localidad,Fecha,Temperatura [�C],Humedad [%HR],Punto de Roc�o [�C],Precipitaci�n [mm],Velocidad Viento [Km/h],Direcci�n Viento,Rafaga Maxima [Km/h],Presi�n [hPa],Radiaci�n Solar [W/m2],Temperatura Suelo 1 [�C],Temperatura Suelo 2 [�C],Temperatura Suelo 3 [�C],Humedad Suelo 1 [%grav],Humedad Suelo 2 [%grav],Humedad Suelo 3 [%grav],Humedad de Hoja [%]
 30135,Yacanto Norte - E01,0,01/02/2017 00:00,19.9,64.8,13.1,0,3.9,OESTE NOROESTE,8.1,882.5,--,--,--,--,--,--,--,--
 30135,Yacanto Norte - E01,0,01/02/2017 00:10,19.4,67.2,13.2,0.2,17.5,NORTE,31.8,883.8,--,--,--,--,--,--,--,--

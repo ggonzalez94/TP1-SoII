@@ -1,0 +1,47 @@
+\hypertarget{server_8c}{}\section{/home/gustav/\+Desktop/\+So\+I\+I/\+T\+P1/src/server/server.c File Reference}
+\label{server_8c}\index{/home/gustav/\+Desktop/\+So\+I\+I/\+T\+P1/src/server/server.\+c@{/home/gustav/\+Desktop/\+So\+I\+I/\+T\+P1/src/server/server.\+c}}
+
+
+Archivo principal del servidor. Maneja hasta 5 clientes conectados.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdbool.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\+h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\+h$>$}\\*
+{\ttfamily \#include $<$netdb.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}usuarios.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}estructura\+De\+Datos.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}estructura\+Promedios.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}server\+Helpers.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bfseries T\+AM}~10000\hypertarget{server_8c_ae0b4816fb45161ef9da5e6d6134ee28a}{}\label{server_8c_ae0b4816fb45161ef9da5e6d6134ee28a}
+
+\item 
+\#define {\bfseries puerto}~6020\hypertarget{server_8c_adaf8db8555ac523198ceeb88c59f8286}{}\label{server_8c_adaf8db8555ac523198ceeb88c59f8286}
+
+\item 
+\#define {\bfseries T\+A\+M\+\_\+\+F\+I\+LE}~8\hypertarget{server_8c_a4ac29b65f5401f3ffa0b34c0e0995e9c}{}\label{server_8c_a4ac29b65f5401f3ffa0b34c0e0995e9c}
+
+\item 
+\#define {\bfseries E\+S\+T\+A\+C\+I\+O\+N\+ES}~3\hypertarget{server_8c_a0bee7f36c24390ed446b3a78311b2f2e}{}\label{server_8c_a0bee7f36c24390ed446b3a78311b2f2e}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})\hypertarget{server_8c_a0ddf1224851353fc92bfbff6f499fa97}{}\label{server_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Archivo principal del servidor. Maneja hasta 5 clientes conectados. 
+
+Este es el codigo encargado de correr el servidor. Autentica a los usuarios e intercambia informacion con el cliente. 
