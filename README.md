@@ -1,6 +1,4 @@
 
- - Para instalar el programa, descargue el repositorio en su computadora.
- - Luego, mediante la terminal, ejecute los siguientes comandos para descomprimir el archivo .zip y situarse en la carpeta donde se halla el Makefile:# TP1-SO-2016 
 
 ### TP1-So2
 ___
