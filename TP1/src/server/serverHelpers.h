@@ -17,5 +17,5 @@ void mensual_precipitacion(int numero_estacion,float array_precipitacion[],struc
 void diario_precipitacion(int numero_estacion,float array_precipitacion[],struct Datos * const datos,int size_datos);
 void calcular_promedio(char *variable,struct Promedio * estaciones,struct Datos * const datos,int size_datos,int cantidad_estaciones);
 bool endsWith(const char *str, const char *suffix);
-int read_all(int socket, void* buffer,int buffer_size);
+int read_all(int socket, char* buffer,int buffer_size);
 bool startsWith(const char *pre, const char *str);

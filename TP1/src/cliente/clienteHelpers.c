@@ -29,7 +29,7 @@ bool startsWith(const char *pre, const char *str)
 * @param buffer Buffer en cual almacenar la cadena leida
 * @param buffer_size Tamano del buffer
 */
-int read_all(int socket, void* buffer, int buffer_size)
+int read_all(int socket, char* buffer, int buffer_size)
 {
     int bytesRead = 0;
     int result;
@@ -43,7 +43,8 @@ int read_all(int socket, void* buffer, int buffer_size)
 
         bytesRead += result;
     }
-	buffer = strtok(buffer,"%3");
+    buffer[strlen(buffer)-1] = 0;
+    buffer[strlen(buffer)-1] = 0;
     return bytesRead;
 }
 
@@ -64,3 +65,5 @@ bool endsWith(const char *str, const char *suffix)
         return 0;
     return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }
+
+

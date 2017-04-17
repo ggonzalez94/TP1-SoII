@@ -1,2 +1,0 @@
-https://www.ibm.com/support/knowledgecenter/en/ssw_ibm_i_71/rtref/strpti.htm
-https://support.microsoft.com/en-us/help/38335/how-to-sscanf-example-using-a-comma-,-as-delimiter

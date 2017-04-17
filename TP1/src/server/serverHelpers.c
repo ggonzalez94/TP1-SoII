@@ -13,6 +13,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "usuarios.h"
 #include "estructuraDeDatos.h"
@@ -328,7 +329,7 @@ void calcular_promedio(char *variable,struct Promedio * promedio_variable,struct
 }
 
 
-int read_all(int socket, void* buffer, int buffer_size)
+int read_all(int socket, char* buffer, int buffer_size)
 {
     int bytesRead = 0;
     int result;
@@ -342,7 +343,8 @@ int read_all(int socket, void* buffer, int buffer_size)
 
         bytesRead += result;
     }
-	buffer = strtok(buffer,"%3");
+    buffer[strlen(buffer)-1] = 0;
+    buffer[strlen(buffer)-1] = 0;
     return bytesRead;
 }
 

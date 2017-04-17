@@ -49,24 +49,22 @@ int main( int argc, char *argv[] ) {
 	}
 	
 	//Sistema de autenticacion
-	//~ printf("Porfavor ingrese su nombre de usuario,ip del servidor y numero de puerto \n");
-	//~ printf("connect usuario@numero_ip:port \n");
-	//~ fgets(buffer_server,sizeof(buffer_server),stdin);
-	//~ //Verifico si comienza con la palabra connect,caso contrario termino el programa
-	//~ char *conexion = "connect";
-	//~ if(!startsWith(conexion,buffer_server)){
-		//~ perror("Comando de conexion invalido");
-		//~ exit(1);
-	//~ }
-	//~ ip = strstr(buffer_server,"@")+1;
-	//~ puerto = strtok(strstr(ip,":")+1,"\n");
-	//~ ip = strtok(ip,":");
-	//~ usuario = strtok(buffer_server,"@");
-	//~ usuario = strstr(usuario,"connect")+strlen("connect")+1;
+	printf("Porfavor ingrese su nombre de usuario,ip del servidor y numero de puerto \n");
+	printf("connect usuario@numero_ip:port \n");
+	fgets(buffer_server,sizeof(buffer_server),stdin);
+	//Verifico si comienza con la palabra connect,caso contrario termino el programa
+	char *conexion = "connect";
+	if(!startsWith(conexion,buffer_server)){
+		perror("Comando de conexion invalido");
+		exit(1);
+	}
+	ip = strstr(buffer_server,"@")+1;
+	puerto = strtok(strstr(ip,":")+1,"\n");
+	ip = strtok(ip,":");
+	usuario = strtok(buffer_server,"@");
+	usuario = strstr(usuario,"connect")+strlen("connect")+1;
 	
 	//Armo la estructura serv_addr para ligarla con el socket y conectarme al server
-	puerto = "6020";
-	ip = "127.0.0.1";
 	serv_addr.sin_addr.s_addr = inet_addr(ip);
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(atoi(puerto));
@@ -75,20 +73,22 @@ int main( int argc, char *argv[] ) {
 		exit( 1 );
 	}
 	
-	//Envio los datos del usuario
-	//~ n = write (sockfd,usuario,strlen(usuario));
+	//~ //Envio los datos del usuario
+	strcat(usuario, "%3"); //Secuencia de fin
+	n = write (sockfd,usuario,strlen(usuario));
 	
-	//~ //Prompt para pedir password
-    //~ printf(BOLDGREEN"Ingerese su contrasena: ");
-    //~ printf("> " RESET);
-    //~ fgets(buffer,TAM,stdin);
-    //~ strtok(buffer, "\n");
-    //~ n = write (sockfd,buffer,strlen(buffer));
-    //~ if ( n < 0 ) {
-		//~ perror( "escritura de socket" );
-		//~ exit(1);
-	//~ }
-	//~ printf("Pass: %s \n",buffer);
+	//Prompt para pedir password
+    printf(BOLDGREEN"Ingerese su contrasena: ");
+    printf("> " RESET);
+    fgets(buffer,TAM,stdin);
+    strtok(buffer, "\n");
+    strcat(buffer, "%3"); //Secuencia de fin
+    n = write (sockfd,buffer,strlen(buffer));
+    if ( n < 0 ) {
+		perror( "escritura de socket" );
+		exit(1);
+	}
+	printf("Pass: %s \n",buffer);
 		
 	
 
@@ -97,17 +97,12 @@ int main( int argc, char *argv[] ) {
 		memset( buffer, '\0', TAM );
 		fgets( buffer, TAM-1, stdin );
 
+		strcat(buffer, "%3"); //Secuencia de fin
 		n = write( sockfd, buffer, strlen(buffer) );
 		if ( n < 0 ) {
 			perror( "escritura de socket" );
 			exit( 1 );
 		}
-
-		//~ // Verificando si se escribió: fin
-		//~ buffer[strlen(buffer)-1] = '\0';
-		//~ if( !strcmp( "fin", buffer ) ) {
-			//~ terminar = 1;
-		//~ }
 
 		memset( buffer, '\0', TAM );
 		n = read_all( sockfd, buffer, TAM );
@@ -116,12 +111,12 @@ int main( int argc, char *argv[] ) {
 			perror( "lectura de socket" );
 			exit( 1 );
 		}
-		printf( "Respuesta: %s\n", buffer );
+		printf("%s",buffer);
 		fflush(stdout);
-		//~ if( terminar ) {
-			//~ printf( "Finalizando ejecución\n" );
-			//~ exit(0);
-		//~ }
+		
+		if (startsWith("Finalizando conexion",buffer)){
+			exit(1);
+		}
 	 }
 	return 0;
 } 

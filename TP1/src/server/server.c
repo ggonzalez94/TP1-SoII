@@ -88,46 +88,44 @@ int main( int argc, char *argv[] ) {
 			close( sockfd );
 			
 			//Validacion
-			//~ memset( buffer, 0, TAM );
-			//~ n = read(newsockfd,buffer,TAM-1);
-			//~ if ( n < 0 ) {
-				//~ perror( "lectura de socket" );
-				//~ exit(1);
-			//~ }
-			//~ char *usuario = malloc(sizeof(char)*strlen(buffer));
-			//~ strcpy(usuario,buffer);
-			//~ n = read(newsockfd,buffer,TAM-1);
-			//~ if ( n < 0 ) {
-				//~ perror( "lectura de socket" );
-				//~ exit(1);
-			//~ }
-			//~ char *password = malloc(sizeof(char)*strlen(buffer));
-			//~ strcpy(password,buffer);
-			//~ int cantidad_usuarios = sizeof(usuarios)/sizeof(usuarios[0]);
-			//~ bool usuario_valido;
-			//~ usuario_valido = autenticacion(usuario,password,usuarios,cantidad_usuarios);
-			//~ if(usuario_valido){
-				//~ printf("El usuario es correcto \n");
-				//~ fflush(stdout);
-			//~ }
-			//~ //Termino el proceso hijo
-			//~ else{
-				//~ printf("El usuario es incorrecto \n");
-				//~ fflush(stdout);
-				//~ exit(1);
-			//~ }
+			memset( buffer, 0, TAM );
+			n = read_all(newsockfd,buffer,TAM-1);
+			if ( n < 0 ) {
+				perror( "lectura de socket" );
+				exit(1);
+			}
+			char *usuario = malloc(sizeof(char)*strlen(buffer));
+			strcpy(usuario,buffer);
+			n = read_all(newsockfd,buffer,TAM-1);
+			if ( n < 0 ) {
+				perror( "lectura de socket" );
+				exit(1);
+			}
+			char *password = malloc(sizeof(char)*strlen(buffer));
+			strcpy(password,buffer);
+			int cantidad_usuarios = sizeof(usuarios)/sizeof(usuarios[0]);
+			bool usuario_valido;
+			usuario_valido = autenticacion(usuario,password,usuarios,cantidad_usuarios);
+			if(usuario_valido){
+				printf("El usuario es correcto \n");
+				fflush(stdout);
+			}
+			//Termino el proceso hijo
+			else{
+				printf("El usuario es incorrecto \n");
+				fflush(stdout);
+				exit(1);
+			}
 			
 			//Acepto comandos
 			while ( 1 ) {
 				memset( buffer, 0, TAM );
 
-				n = read( newsockfd, buffer, TAM-1 );
+				n = read_all( newsockfd, buffer, TAM-1 );
 				if ( n < 0 ) {
 					perror( "lectura de socket" );
 					exit(1);
 				}
-				printf("%s \n",buffer);
-				fflush(stdout);
 				
 				if (startsWith("listar",buffer)){
 					memset( buffer, 0, TAM );
@@ -147,19 +145,15 @@ int main( int argc, char *argv[] ) {
 				}
 				
 				else if(startsWith("diario_precipitacion",buffer)){
-					printf("Diario precipitacion");
-					fflush(stdout);
 					char *estacion;
 					int nro_estacion;
-					char cadena[80];
+					char cadena[20];
 					estacion = strstr(buffer,"diario_precipitacion")+strlen("diario_precipitacion") + 1;
 					nro_estacion = atoi(estacion);
 					diario_precipitacion(nro_estacion,precipitacion_diaria,datos,TAM_FILE);
 					memset( buffer, 0, TAM );
 					for(int i=0;i<365;i++){
-						sprintf(estacion,"Dia: %f ",precipitacion_diaria[i]);
-						printf("%s \n",cadena);
-						fflush(stdout);
+						sprintf(cadena,"Dia %i: %f \n",i,precipitacion_diaria[i]);
 						strcat(buffer,cadena);
 					}
 					strcat(buffer, "%3"); //Secuencia de fin
@@ -175,9 +169,7 @@ int main( int argc, char *argv[] ) {
 					mensual_precipitacion(nro_estacion,precipitacion_mensual,datos,TAM_FILE);
 					memset( buffer, 0, TAM );
 					for(int i=0;i<12;i++){
-						sprintf(cadena,"Mes: %f ",precipitacion_mensual[i]);
-						printf("%s \n",cadena);
-						fflush(stdout);
+						sprintf(cadena,"Mes %i: %f \n",i,precipitacion_mensual[i]);
 						strcat(buffer,cadena);
 					}
 					strcat(buffer, "%3"); //Secuencia de fin
@@ -189,15 +181,13 @@ int main( int argc, char *argv[] ) {
 					int ln = strlen (variable);
 					if ((ln > 0) && (variable[ln-1] == '\n'))
 						variable[ln-1] = '\0';
-					puts(variable);
 					calcular_promedio(variable,promedio_estaciones,datos,TAM_FILE,ESTACIONES);
 					memset( buffer, 0, TAM );
 					for(int i=0;i<ESTACIONES;i++){
-						sprintf(promedio,"Estacion: %f ",promedio_estaciones[i].variable);
+						sprintf(promedio,"Estacion %i: %f \n",promedio_estaciones[i].numero,promedio_estaciones[i].variable);
 						strcat(buffer,promedio);
 					}
 					strcat(buffer, "%3"); //Secuencia de fin
-					puts(buffer);
 					n = write(newsockfd,buffer,strlen(buffer));
 				}
 				

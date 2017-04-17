@@ -7,4 +7,4 @@
 #include <stdbool.h>
 bool startsWith(const char *pre, const char *str);
 bool endsWith(const char *str, const char *suffix);
-int read_all(int socket, void* buffer,int buffer_size);
+int read_all(int socket, char* buffer,int buffer_size);
