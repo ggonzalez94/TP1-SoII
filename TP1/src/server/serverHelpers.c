@@ -195,7 +195,7 @@ void mensual_precipitacion(int numero_estacion,float array_precipitacion[],struc
 		//Si el numero de estacion coincide con el que deseo
 		if (numero_estacion == datos_auxiliar->numero){
 			//Aumento la cuenta de precipitacion en el mes correspondiente(lo tengo en las estructuras de datos)
-			array_precipitacion[datos_auxiliar->fecha.tm_mon]+=datos_auxiliar->precipitacion;
+			array_precipitacion[datos_auxiliar->fecha.tm_mon]= array_precipitacion[datos_auxiliar->fecha.tm_mon] + datos_auxiliar->precipitacion;
 		}
 		datos_auxiliar++;
 	}
@@ -220,7 +220,7 @@ void diario_precipitacion(int numero_estacion,float array_precipitacion[],struct
 		//Si el numero de estacion coincide con el que deseo
 		if (numero_estacion == datos_auxiliar->numero){
 			//Aumento la cuenta de precipitacion en el dia correspondiente(lo tengo en las estructuras de datos)
-			array_precipitacion[datos_auxiliar->fecha.tm_yday]+=datos_auxiliar->precipitacion;
+			array_precipitacion[datos_auxiliar->fecha.tm_yday]=array_precipitacion[datos_auxiliar->fecha.tm_yday] + datos_auxiliar->precipitacion;
 		}
 		datos_auxiliar++;
 	}
@@ -249,8 +249,8 @@ void calcular_promedio(char *variable,struct Promedio * promedio_variable,struct
 			for (int j=0;j<cantidad_estaciones;j++){
 				//Valido el numero de estacion y que existan datos del sensor
 				if (promedio_variable[j].numero == datos[i].numero && datos[i].temperatura != -9999){
-					promedio_variable[j].variable += datos[i].temperatura;
-					promedio_variable[j].cantidad_lecturas += 1;
+					promedio_variable[j].variable = promedio_variable[j].variable + datos[i].temperatura;
+					promedio_variable[j].cantidad_lecturas =promedio_variable[j].cantidad_lecturas + 1;
 				}
 			}
 		}
@@ -259,8 +259,8 @@ void calcular_promedio(char *variable,struct Promedio * promedio_variable,struct
 			for (int j=0;j<cantidad_estaciones;j++){
 				//Valido el numero de estacion y que existan datos del sensor
 				if (promedio_variable[j].numero == datos[i].numero && datos[i].humedad != -9999){
-					promedio_variable[j].variable += datos[i].humedad;
-					promedio_variable[j].cantidad_lecturas += 1;
+					promedio_variable[j].variable = promedio_variable[j].variable + datos[i].humedad;
+					promedio_variable[j].cantidad_lecturas ++;
 				}
 			}
 		}
@@ -269,8 +269,8 @@ void calcular_promedio(char *variable,struct Promedio * promedio_variable,struct
 			for (int j=0;j<cantidad_estaciones;j++){
 				//Valido el numero de estacion y que existan datos del sensor
 				if (promedio_variable[j].numero == datos[i].numero && datos[i].punto_rocio != -9999){
-					promedio_variable[j].variable += datos[i].punto_rocio;
-					promedio_variable[j].cantidad_lecturas += 1;
+					promedio_variable[j].variable = promedio_variable[j].variable + datos[i].punto_rocio;
+					promedio_variable[j].cantidad_lecturas ++;
 				}
 			}
 		}
@@ -339,6 +339,7 @@ int read_all(int socket, char* buffer, int buffer_size)
         if (result < 1 )
         {
             perror("Lectura: ");
+            exit(1);
         }
 
         bytesRead += result;

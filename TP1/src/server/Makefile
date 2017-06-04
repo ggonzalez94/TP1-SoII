@@ -1,7 +1,7 @@
 
 
 CC=gcc
-CFLAGS=-I.
+CFLAGS=-I. -std=gnu99
 DEPS = serverHelpers.h usuarios.h estructuraDeDatos.h estructuraPromedios.h
 OBJ = server.o serverHelpers.o 
 
