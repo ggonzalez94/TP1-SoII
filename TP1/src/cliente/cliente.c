@@ -23,17 +23,17 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include<arpa/inet.h> //inet_addr
+#include <arpa/inet.h> //inet_addr
 
 #include "cliente.h"
 #include "usuarios.h"
 #include "colores.h"
-#define TAM 256
 
 
 
 int main( int argc, char *argv[] ) {
 	int sockfd, n;
+	int socket_udp;
 	char buffer_server[50];
 	char *ip,*puerto,*usuario;
 	struct sockaddr_in serv_addr;
@@ -47,6 +47,9 @@ int main( int argc, char *argv[] ) {
 		perror( "ERROR apertura de socket" );
 		exit( 1 );
 	}
+	
+
+
 	
 	//Sistema de autenticacion
 	printf("Porfavor ingrese su nombre de usuario,ip del servidor y numero de puerto \n");
@@ -104,11 +107,17 @@ int main( int argc, char *argv[] ) {
 			exit( 1 );
 		}
 
+		if (startsWith("descargar",buffer)){
+			printf("Iniciando socket udp\n");
+			socket_udp = start_udp_socket(socket_udp);
+			prompt_socket(socket_udp,serv_addr);
+		}
+
 		memset( buffer, '\0', TAM );
 		n = read_all( sockfd, buffer, TAM );
 		
 		if ( n < 0 ) {
-			perror( "lectura de socket" );
+			perror( "socket tcp" );
 			exit( 1 );
 		}
 		printf("%s",buffer);

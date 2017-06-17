@@ -14,6 +14,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h> 
 
 #include "usuarios.h"
 #include "estructuraDeDatos.h"
@@ -239,8 +242,10 @@ void diario_precipitacion(int numero_estacion,float array_precipitacion[],struct
 * @param cantidad_estaciones Cantidad de estaciones
 */
 void calcular_promedio(char *variable,struct Promedio * promedio_variable,struct Datos * const datos,int size_datos,int cantidad_estaciones){
-	//Reinicio la cantidad de lecturas
+
+	//Pongo los valores de promedio en 0 y reinicio la cantidad de lecturas
 	for (int i=0;i<cantidad_estaciones;i++){
+		promedio_variable[i].variable = 0;
 		promedio_variable[i].cantidad_lecturas = 0;
 	}
 	//Recorro todo el archivo(las estructuras)
@@ -367,4 +372,64 @@ bool startsWith(const char *pre, const char *str)
     return lenstr < lenpre ? false : strncmp(pre, str, lenpre) == 0;
 }
 
+int start_udp_socket(int sock,struct sockaddr_in *dest_addr){
+	struct hostent *server;
+	char buffer[1000];
+
+	server = gethostbyname("localhost");
+	if ( server == NULL ) {
+		fprintf( stderr, "ERROR, no existe el host\n");
+		exit(0);
+	}
+
+	int puerto = 6020;
+	sock = socket( AF_INET, SOCK_DGRAM, 0 );
+	if (sock < 0) {
+		perror( "apertura de socket" );
+		exit( 1 );
+	}
+
+	dest_addr->sin_family = AF_INET;
+	dest_addr->sin_port = htons(puerto);
+	dest_addr->sin_addr = *( (struct in_addr *)server->h_addr );
+	memset( &(dest_addr->sin_zero), '\0', 8 );
+	printf("Puerto cliente %d\n",ntohs(dest_addr->sin_port));
+	return sock;
+}
+
+void prompt_socket(int sock,struct sockaddr_in dest_addr){
+	char buffer[TAM];
+	memset( buffer, 0, 1000 );
+	fgets( buffer, 1000, stdin );
+
+	while(1){
+		printf( "Ingrese el mensaje a transmitir: " );
+		memset( buffer, '\0', TAM );
+		fgets( buffer, TAM-1, stdin );
+		int tamano_direccion = sizeof( dest_addr );
+		int n = sendto( sock, (void *)buffer, 1000, 0, (struct sockaddr *)&dest_addr, tamano_direccion );
+		if ( n < 0 ) {
+			perror( "Escritura en socket" );
+			exit( 1 );
+		}
+		if(startsWith("fin",buffer)){
+			return;
+		}
+	}
+	return;
+}
+
+void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,float precipitacion_mensual[12],float precipitacion_diaria[365]){
+	char buffer[TAM];
+	char cadena[20];
+	memset( buffer, 0, TAM );
+	for (int i = 0; i < 12.; ++i)
+	{
+		sprintf(cadena,"Mes %i: %f \n",i,precipitacion_mensual[i]);
+		strcat(buffer,cadena);
+	}
+	int tamano_direccion = sizeof( dest_addr );
+	int n = sendto( sock, (void *)buffer, TAM, 0, (struct sockaddr *)&dest_addr, tamano_direccion );
+	return;
+}
 

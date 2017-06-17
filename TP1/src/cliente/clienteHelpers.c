@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h> 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <stdlib.h>
 #include "cliente.h"
 
 /**
@@ -67,3 +71,51 @@ bool endsWith(const char *str, const char *suffix)
 }
 
 
+
+int start_udp_socket(int sock){
+    struct sockaddr_in serv_addr;
+    int puerto;
+
+    sock = socket( AF_INET, SOCK_DGRAM, 0 );
+    memset( &serv_addr, 0, sizeof(serv_addr) );
+    puerto = 6020;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    serv_addr.sin_port = htons( puerto );
+    memset( &(serv_addr.sin_zero), '\0', 8 );
+    if( bind( sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr) ) < 0 ) {
+        perror( "ERROR en binding" );
+        exit( 1 );
+    }
+
+    printf( "Socket disponible: %d\n", ntohs(serv_addr.sin_port) );
+    
+    return sock;
+}
+
+void prompt_socket(int socket_udp,struct sockaddr_in serv_addr){
+    FILE *fp;
+    char buffer[TAM];
+    int n;
+    fp = fopen("../../datos_estacion.txt","w");
+    int tamano_direccion = sizeof( struct sockaddr );
+    
+    memset( buffer, 0, TAM );
+    n = recvfrom( socket_udp, buffer, TAM-1, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
+    if ( n < 0 ) {
+        perror( "socket read" );
+        exit( 1 );
+    }
+    printf("Recibí: %s\n",buffer );
+    printf( "Recibí: %ld", sizeof(buffer)/sizeof(buffer[0]) );
+    n = fwrite(buffer,sizeof(buffer[0]),sizeof(buffer)/sizeof(buffer[0]),fp);
+    printf("%d\n",n );
+    if (n<0){
+        perror("File write");
+    }
+    if (startsWith("fin",buffer)){
+        return;
+    }
+    fclose(fp);
+    return;
+}

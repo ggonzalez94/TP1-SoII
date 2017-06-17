@@ -19,7 +19,6 @@
 #include "estructuraDeDatos.h"
 #include "estructuraPromedios.h"
 #include "serverHelpers.h"
-#define TAM 10000
 #define puerto 6020
 #define TAM_FILE 18304 //Tamano de la estructura que guarda las lineas del archivo
 #define ESTACIONES 3 //Cantidad de estaciones en el archivo CSV
@@ -27,9 +26,11 @@
 int main( int argc, char *argv[] ) {
 	//Declaracion de variables
 	int sockfd, newsockfd, clilen, pid;
+	int socket_udp;
 	char buffer[TAM];
 	char promedio[80];
 	struct sockaddr_in serv_addr, cli_addr;
+	struct sockaddr_in dest_addr;
 	int n;
 	struct Datos *datos;
 	char *estaciones[ESTACIONES]; //Arreglo con las estaciones no repetidas
@@ -49,6 +50,7 @@ int main( int argc, char *argv[] ) {
 	datos = csv_parser();  //Lleno con los datos del archivo
 	listar_estaciones(datos,promedio_estaciones,TAM_FILE,ESTACIONES); //Listo las estaciones sin repetir
 	
+
 	//Creo el socket y lo ligo a una direccion ip
 	sockfd = socket( AF_INET, SOCK_STREAM, 0);
 	if ( sockfd < 0 ) { 
@@ -139,8 +141,12 @@ int main( int argc, char *argv[] ) {
 				}
 				
 				else if (startsWith("descargar",buffer)){
-					strcpy(buffer,"Descarga no disponible");
-					strcat(buffer, "%3"); //Secuencia de fin
+					int nro_estacion = 30135;
+					printf("Iniciando socket udp server\n" );
+					socket_udp = start_udp_socket(socket_udp,&cli_addr);
+					mensual_precipitacion(nro_estacion,precipitacion_mensual,datos,TAM_FILE);
+					send_file_info(socket_udp,cli_addr,nro_estacion,precipitacion_mensual,precipitacion_diaria);
+					strcat(buffer,"Descarga finalizada%3");
 					n = write(newsockfd,buffer,strlen(buffer));
 				}
 				
