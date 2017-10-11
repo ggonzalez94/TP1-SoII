@@ -101,15 +101,14 @@ void prompt_socket(int socket_udp,struct sockaddr_in serv_addr){
     int tamano_direccion = sizeof( struct sockaddr );
     
     memset( buffer, 0, TAM );
-    n = recvfrom( socket_udp, buffer, TAM-1, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
+    n = read_all_udp(socket_udp,buffer,TAM,serv_addr,tamano_direccion);
+    //n = recvfrom( socket_udp, buffer, TAM-1, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
     if ( n < 0 ) {
         perror( "socket read" );
         exit( 1 );
     }
     printf("Recibí: %s\n",buffer );
-    printf( "Recibí: %ld", sizeof(buffer)/sizeof(buffer[0]) );
-    n = fwrite(buffer,sizeof(buffer[0]),sizeof(buffer)/sizeof(buffer[0]),fp);
-    printf("%d\n",n );
+    n = fwrite(buffer,sizeof(buffer[0]),strlen(buffer),fp);
     if (n<0){
         perror("File write");
     }
@@ -118,4 +117,23 @@ void prompt_socket(int socket_udp,struct sockaddr_in serv_addr){
     }
     fclose(fp);
     return;
+}
+
+int read_all_udp(int socket_udp, char* buffer, int buffer_size,struct sockaddr_in serv_addr,int tamano_direccion)
+{
+    int bytesRead = 0;
+    int result;
+    while (!endsWith(buffer,"%3"))
+    {
+        result = recvfrom( socket_udp, buffer+bytesRead, buffer_size, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
+        if (result < 1 )
+        {
+            perror("Lectura: ");
+        }
+
+        bytesRead += result;
+    }
+    buffer[strlen(buffer)-1] = 0;
+    buffer[strlen(buffer)-1] = 0;
+    return bytesRead;
 }

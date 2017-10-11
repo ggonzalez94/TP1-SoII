@@ -21,7 +21,7 @@
 #include "serverHelpers.h"
 #define puerto 6020
 #define TAM_FILE 18304 //Tamano de la estructura que guarda las lineas del archivo
-#define ESTACIONES 3 //Cantidad de estaciones en el archivo CSV
+#define ESTACIONES 5 //Cantidad de estaciones en el archivo CSV
 
 int main( int argc, char *argv[] ) {
 	//Declaracion de variables
@@ -37,6 +37,8 @@ int main( int argc, char *argv[] ) {
 	float precipitacion_mensual[12]; //Uno para cada mes del ano
 	float precipitacion_diaria[365]; //Uno para cada dia del ano
 	struct Promedio promedio_estaciones[ESTACIONES]; //Arreglo para promedio de las estaciones
+	struct Promedio promedio_estaciones_temperatura[ESTACIONES];
+	struct Promedio promedio_estaciones_humedad[ESTACIONES];
 	//Usuarios de prueba
 	struct Usuario usuario1;
 	struct Usuario usuario2;
@@ -118,6 +120,7 @@ int main( int argc, char *argv[] ) {
 				fflush(stdout);
 				exit(1);
 			}
+			socket_udp = start_udp_socket(socket_udp,&cli_addr);
 			
 			//Acepto comandos
 			while ( 1 ) {
@@ -136,18 +139,35 @@ int main( int argc, char *argv[] ) {
 						strcat(buffer,promedio_estaciones[i].nombre_estacion);
 						strcat(buffer,"\n");
 					}
-					strcat(buffer, "%3"); //Secuencia de fin
-					n = write(newsockfd,buffer,strlen(buffer));
 				}
 				
 				else if (startsWith("descargar",buffer)){
-					int nro_estacion = 30135;
-					printf("Iniciando socket udp server\n" );
-					socket_udp = start_udp_socket(socket_udp,&cli_addr);
+					char *estacion;
+					int nro_estacion;
+					float promedio_temperatura = -9999;
+					float promedio_humedad = -9999;
+					char cadena[20];
+					estacion = strstr(buffer,"descargar")+strlen("descargar") + 1;
+					nro_estacion = atoi(estacion);
 					mensual_precipitacion(nro_estacion,precipitacion_mensual,datos,TAM_FILE);
-					send_file_info(socket_udp,cli_addr,nro_estacion,precipitacion_mensual,precipitacion_diaria);
-					strcat(buffer,"Descarga finalizada%3");
-					n = write(newsockfd,buffer,strlen(buffer));
+					calcular_promedio("temperatura",promedio_estaciones,datos,TAM_FILE,ESTACIONES);
+					for (int i = 0; i < ESTACIONES; ++i)
+					{
+						if (promedio_estaciones[i].numero == nro_estacion)
+						{
+							promedio_temperatura = promedio_estaciones[i].variable;
+						}
+					}
+					calcular_promedio("humedad",promedio_estaciones,datos,TAM_FILE,ESTACIONES);
+					for (int i = 0; i < ESTACIONES; ++i)
+					{
+						if (promedio_estaciones[i].numero == nro_estacion)
+						{
+							promedio_humedad = promedio_estaciones[i].variable;
+						}
+					}
+					send_file_info(socket_udp,cli_addr,nro_estacion,precipitacion_mensual,precipitacion_diaria,promedio_temperatura,promedio_humedad);
+					strcat(buffer,"Descarga finalizada \n");
 				}
 				
 				else if(startsWith("diario_precipitacion",buffer)){
@@ -162,8 +182,6 @@ int main( int argc, char *argv[] ) {
 						sprintf(cadena,"Dia %i: %f \n",i,precipitacion_diaria[i]);
 						strcat(buffer,cadena);
 					}
-					strcat(buffer, "%3"); //Secuencia de fin
-					n = write(newsockfd,buffer,strlen(buffer));
 				}
 				
 				else if(startsWith("mensual_precipitacion",buffer)){
@@ -177,9 +195,7 @@ int main( int argc, char *argv[] ) {
 					for(int i=0;i<12;i++){
 						sprintf(cadena,"Mes %i: %f \n",i,precipitacion_mensual[i]);
 						strcat(buffer,cadena);
-					}
-					strcat(buffer, "%3"); //Secuencia de fin
-					n = write(newsockfd,buffer,strlen(buffer));		
+					}		
 				}
 				
 				else if(startsWith("promedio",buffer)){
@@ -193,8 +209,6 @@ int main( int argc, char *argv[] ) {
 						sprintf(promedio,"Estacion %i: %f \n",promedio_estaciones[i].numero,promedio_estaciones[i].variable);
 						strcat(buffer,promedio);
 					}
-					strcat(buffer, "%3"); //Secuencia de fin
-					n = write(newsockfd,buffer,strlen(buffer));
 				}
 				
 				else if (startsWith("desconectar",buffer)){
@@ -206,8 +220,13 @@ int main( int argc, char *argv[] ) {
 				
 				else{
 					strcpy(buffer,"Comando no disponible. Intente nuevamente");
-					strcat(buffer, "%3"); //Secuencia de fin
-					n = write(newsockfd,buffer,strlen(buffer));
+
+				}
+
+				strcat(buffer, "%3"); //Secuencia de fin
+				n = write(newsockfd,buffer,strlen(buffer));
+				if (n<0){
+					perror("Escritura de socket: ");
 				}
 				
 

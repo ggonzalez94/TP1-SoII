@@ -92,7 +92,7 @@ int main( int argc, char *argv[] ) {
 		exit(1);
 	}
 	printf("Pass: %s \n",buffer);
-		
+	socket_udp = start_udp_socket(socket_udp);
 	
 
 	 while(1) {
@@ -109,7 +109,6 @@ int main( int argc, char *argv[] ) {
 
 		if (startsWith("descargar",buffer)){
 			printf("Iniciando socket udp\n");
-			socket_udp = start_udp_socket(socket_udp);
 			prompt_socket(socket_udp,serv_addr);
 		}
 

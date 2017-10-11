@@ -22,4 +22,4 @@ int read_all(int socket, char* buffer,int buffer_size);
 bool startsWith(const char *pre, const char *str);
 void prompt_socket(int socket,struct sockaddr_in dest_addr;);
 int start_udp_socket(int sock,struct sockaddr_in *dest_addr);
-void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,float precipitacion_mensual[12],float precipitacion_diaria[365]);
+void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,float precipitacion_mensual[12],float precipitacion_diaria[365],float temperatura, float humedad);
