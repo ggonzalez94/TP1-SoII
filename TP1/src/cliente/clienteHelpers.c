@@ -88,7 +88,7 @@ int start_udp_socket(int sock){
         exit( 1 );
     }
 
-    printf( "Socket disponible: %d\n", ntohs(serv_addr.sin_port) );
+    printf( "Socket udp disponible: %d\n", ntohs(serv_addr.sin_port) );
     
     return sock;
 }

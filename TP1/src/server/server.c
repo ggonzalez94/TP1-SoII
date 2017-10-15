@@ -120,7 +120,9 @@ int main( int argc, char *argv[] ) {
 				fflush(stdout);
 				exit(1);
 			}
-			socket_udp = start_udp_socket(socket_udp,&cli_addr);
+			//socket_udp = start_udp_socket(socket_udp,&cli_addr);
+			socket_udp = socket( AF_INET, SOCK_DGRAM, 0 );
+			cli_addr.sin_port = htons(6020);
 			
 			//Acepto comandos
 			while ( 1 ) {
