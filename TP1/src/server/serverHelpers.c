@@ -421,8 +421,8 @@ void prompt_socket(int sock,struct sockaddr_in dest_addr){
 
 void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,float precipitacion_mensual[12],float precipitacion_diaria[365],float temperatura,float humedad){
 	char buffer[TAM];
-	char cadena[20];
-	char nro_estacion[20];
+	char cadena[40];
+	char nro_estacion[40];
 	memset( buffer, 0, TAM );
 	strcat(buffer,"Nombre estacion: \n");
 	sprintf(nro_estacion,"Numero de estacion: %i\n",estacion);
@@ -431,13 +431,14 @@ void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,float pre
 	strcat(buffer,cadena);
 	sprintf(cadena,"Promedio humedad: %f\n",humedad);
 	strcat(buffer,cadena);
-	for (int i = 0; i < 12.; ++i)
+	for (int i = 0; i < 12.; i++)
 	{
 		sprintf(cadena,"Mes %i: %f \n",i,precipitacion_mensual[i]);
 		strcat(buffer,cadena);
 	}
 	int tamano_direccion = sizeof( dest_addr );
 	printf("Envio por UDP: %s\n",buffer );
+	fflush(stdout);
 	strcat(buffer, "%3"); //Secuencia de fin
 	int n = sendto( sock, (void *)buffer, TAM, 0, (struct sockaddr *)&dest_addr, tamano_direccion );
 	return;
