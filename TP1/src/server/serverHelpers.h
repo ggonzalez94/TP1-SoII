@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #define BUFFER_SIZE 10000
 #define TAM_FILE 18304
-#define TAM 1000
+#define TAM 10000
 
 bool autenticacion(char *usuario,char *password,struct Usuario *usuarios,int array_length);
 struct Datos *csv_parser();

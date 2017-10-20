@@ -169,13 +169,25 @@ int main( int argc, char *argv[] ) {
 						}
 					}
 					send_file_info(socket_udp,cli_addr,nro_estacion,precipitacion_mensual,precipitacion_diaria,promedio_temperatura,promedio_humedad);
-					strcat(buffer,"Descarga finalizada \n");
+					strcpy(buffer,"Descarga finalizada \n");
 				}
 				
 				else if(startsWith("diario_precipitacion",buffer)){
 					char *estacion;
 					int nro_estacion;
-					char cadena[20];
+					char cadena[80];
+					estacion = strstr(buffer,"diario_precipitacion")+strlen("diario_precipitacion") + 1;
+					nro_estacion = atoi(estacion);
+					diario_precipitacion(nro_estacion,precipitacion_diaria,datos,TAM_FILE);
+					memset( buffer, 0, TAM );
+					for(int i=0;i<365;i++){
+						sprintf(cadena,"Dia %i: %f \n",i,precipitacion_diaria[i]);
+						strcat(buffer,cadena);
+					}
+				}				else if(startsWith("diario_precipitacion",buffer)){
+					char *estacion;
+					int nro_estacion;
+					char cadena[200];
 					estacion = strstr(buffer,"diario_precipitacion")+strlen("diario_precipitacion") + 1;
 					nro_estacion = atoi(estacion);
 					diario_precipitacion(nro_estacion,precipitacion_diaria,datos,TAM_FILE);
