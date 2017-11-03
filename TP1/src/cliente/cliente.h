@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#define TAM 1000
+#define TAM 10000
 
 bool startsWith(const char *pre, const char *str);
 bool endsWith(const char *str, const char *suffix);

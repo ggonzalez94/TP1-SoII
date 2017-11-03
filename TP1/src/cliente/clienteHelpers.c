@@ -99,19 +99,27 @@ void prompt_socket(int socket_udp,struct sockaddr_in serv_addr){
     int n;
     fp = fopen("../../datos_estacion.txt","w");
     int tamano_direccion = sizeof( struct sockaddr );
+    bool recibir = true;
     
-    memset( buffer, 0, TAM );
-    n = read_all_udp(socket_udp,buffer,TAM,serv_addr,tamano_direccion);
-    //n = recvfrom( socket_udp, buffer, TAM-1, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
-    if ( n < 0 ) {
-        perror( "socket read" );
-        exit( 1 );
+    while (recibir)
+    {
+        memset( buffer, 0, TAM );
+        n = read_all_udp(socket_udp,buffer,TAM,serv_addr,tamano_direccion);
+        //n = recvfrom( socket_udp, buffer, TAM-1, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
+        if ( n < 0 ) {
+            perror( "socket read" );
+            exit( 1 );
+        }
+        //printf("Recibí: %s\n",buffer );
+        n = fwrite(buffer,sizeof(buffer[0]),strlen(buffer),fp);
+        if (n<0){
+            perror("File write");
+        }
+        if (startsWith("exit",buffer)){ 
+            recibir = false;
+        }
     }
-    printf("Recibí: %s\n",buffer );
-    n = fwrite(buffer,sizeof(buffer[0]),strlen(buffer),fp);
-    if (n<0){
-        perror("File write");
-    }
+
     if (startsWith("fin",buffer)){
         return;
     }
@@ -123,9 +131,11 @@ int read_all_udp(int socket_udp, char* buffer, int buffer_size,struct sockaddr_i
 {
     int bytesRead = 0;
     int result;
+    //printf("%s\n","Reading UDP" );
+    fflush(stdout);
     while (!endsWith(buffer,"%3"))
     {
-        result = recvfrom( socket_udp, buffer+bytesRead, buffer_size, 0, (struct sockaddr *)&serv_addr, &tamano_direccion );
+        result = recvfrom( socket_udp, buffer+bytesRead, buffer_size, MSG_WAITALL, (struct sockaddr *)&serv_addr, &tamano_direccion );
         if (result < 1 )
         {
             perror("Lectura: ");

@@ -151,24 +151,8 @@ int main( int argc, char *argv[] ) {
 					char cadena[20];
 					estacion = strstr(buffer,"descargar")+strlen("descargar") + 1;
 					nro_estacion = atoi(estacion);
-					mensual_precipitacion(nro_estacion,precipitacion_mensual,datos,TAM_FILE);
-					calcular_promedio("temperatura",promedio_estaciones,datos,TAM_FILE,ESTACIONES);
-					for (int i = 0; i < ESTACIONES; ++i)
-					{
-						if (promedio_estaciones[i].numero == nro_estacion)
-						{
-							promedio_temperatura = promedio_estaciones[i].variable;
-						}
-					}
-					calcular_promedio("humedad",promedio_estaciones,datos,TAM_FILE,ESTACIONES);
-					for (int i = 0; i < ESTACIONES; ++i)
-					{
-						if (promedio_estaciones[i].numero == nro_estacion)
-						{
-							promedio_humedad = promedio_estaciones[i].variable;
-						}
-					}
-					send_file_info(socket_udp,cli_addr,nro_estacion,precipitacion_mensual,precipitacion_diaria,promedio_temperatura,promedio_humedad);
+
+					send_file_info(socket_udp,cli_addr,nro_estacion,datos,TAM_FILE);
 					strcpy(buffer,"Descarga finalizada \n");
 				}
 				

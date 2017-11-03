@@ -419,28 +419,50 @@ void prompt_socket(int sock,struct sockaddr_in dest_addr){
 	return;
 }
 
-void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,float precipitacion_mensual[12],float precipitacion_diaria[365],float temperatura,float humedad){
+void send_file_info(int sock,struct sockaddr_in dest_addr,int estacion,struct Datos *datos,int size_datos){
 	char buffer[TAM];
-	char cadena[40];
+	char cadena[400];
 	char nro_estacion[40];
-	memset( buffer, 0, TAM );
-	strcat(buffer,"Nombre estacion: \n");
-	sprintf(nro_estacion,"Numero de estacion: %i\n",estacion);
-	strcat(buffer,nro_estacion);
-	sprintf(cadena,"Promedio Temperatura: %f\n",temperatura);
-	strcat(buffer,cadena);
-	sprintf(cadena,"Promedio humedad: %f\n",humedad);
-	strcat(buffer,cadena);
-	for (int i = 0; i < 12.; i++)
-	{
-		sprintf(cadena,"Mes %i: %f \n",i,precipitacion_mensual[i]);
-		strcat(buffer,cadena);
-	}
+	int tamano_envio = 20; //Cantidad de lineas a enviar en cada envio
 	int tamano_direccion = sizeof( dest_addr );
-	printf("Envio por UDP: %s\n",buffer );
-	fflush(stdout);
+	memset( buffer, 0, TAM );
+	for (int i = 0; i < size_datos; ++i)
+	{
+		if(datos->numero == estacion){
+			sprintf(cadena,"%i %i %s %i  %f %f %f %f %f %s %f %f %f %f %f %f %f %f %f %f",i,datos->numero,datos->nombre_estacion,
+				datos->ID_localidad,datos->temperatura,datos->humedad,datos->punto_rocio,datos->precipitacion,
+				datos->velocidad_viento,datos->direccion_viento,datos->rafaga_maxima,datos->presion,datos->radiacion_solar,
+				datos->temperatura_suelo_1,datos->temperatura_suelo_2,datos->temperatura_suelo_3,datos->humedad_suelo_1,
+				datos->humedad_suelo_2,datos->humedad_suelo_3,datos->humedad_hoja);
+			strcat(buffer,cadena);
+			strcat(buffer,"\n");
+			strcat(buffer, "%3"); //Secuencia de fin
+			printf("%s", buffer );
+			int n = sendto( sock, (void *)buffer, 400, MSG_CONFIRM, (struct sockaddr *)&dest_addr, tamano_direccion );
+			if (n<0){
+				perror("Escritura UDP");
+				exit(1);
+			}
+		}
+		datos++;
+		memset( buffer, 0, TAM );
+		memset (cadena,0, TAM);
+	}
+	//Envio secuencia para dejar de leer
+	strcpy(buffer,"exit");
 	strcat(buffer, "%3"); //Secuencia de fin
-	int n = sendto( sock, (void *)buffer, TAM, 0, (struct sockaddr *)&dest_addr, tamano_direccion );
+	printf("%s\n", buffer);
+	fflush(stdout);
+	int n = sendto( sock, (void *)buffer, TAM, MSG_CONFIRM, (struct sockaddr *)&dest_addr, tamano_direccion );
+	if (n<0){
+		perror("Escritura UDP");
+		exit(1);
+	}
+	
+	// printf("Envio por UDP: %s\n",buffer );
+	// fflush(stdout);
+	// strcat(buffer, "%3"); //Secuencia de fin
+	// int n = sendto( sock, (void *)buffer, TAM, 0, (struct sockaddr *)&dest_addr, tamano_direccion );
 	return;
 }
 
